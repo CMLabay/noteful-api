@@ -15,9 +15,9 @@ describe('Folders Endpoints', function() {
 
     after('disconnect from db', () => db.destroy())
 
-    before('clean the table', () => db.raw('TRUNCATE folders, notes RESTART IDENTITY CASCADE'))
+    before('clean the table', () => db.raw('TRUNCATE folders RESTART IDENTITY CASCADE'))
 
-    afterEach('cleanup', () => db.raw('TRUNCATE folders, notes RESTART IDENTITY CASCADE'))
+    afterEach('cleanup', () => db.raw('TRUNCATE folders RESTART IDENTITY CASCADE'))
 
     describe(`GET /api/folders`, () => {
         context(`Given no articles`, () => {
@@ -58,7 +58,7 @@ describe('Folders Endpoints', function() {
                 const folderId = 123456
                 return supertest(app)
                 .get(`/api/folders/${folderId}`)
-                .expect(404, {error: { message: `Folder does not exist`}})
+                .expect(404, {error: { message: `Folder doesn't exist`}})
             })
         })
 
@@ -78,10 +78,10 @@ describe('Folders Endpoints', function() {
 
             it('responds with 200 and hte specified folder', () => {
                 const folderId = 2
-                const expectedFolder = testFolder[folderId - 1]
+                const expectedFolder = testFolders[folderId - 1]
                 return supertest(app)
                     .get(`/api/folders/${folderId}`)
-                    .expected(200, expectedFolder)
+                    .expect(200, expectedFolder)
             })
         })
         //xss attack logic
@@ -93,15 +93,15 @@ describe('Folders Endpoints', function() {
 
         it(`creates a folder, responding with 201 and the new article`, () => {
             const newFolder = {
-                name: 'This new folder'
+                folder_name: 'This new folder'
             }
             return supertest(app)
                 .post('/api/folders')
                 .send(newFolder)
                 .expect(201)
                 .expect(res => {
-                    expect(res.body.name).to.eql(newFolder.name)
-                    expect(res.body),to.have.property('id')
+                    expect(res.body.folder_name).to.eql(newFolder.folder_name)
+                    expect(res.body).to.have.property('id')
                     expect(res.headers.location).to.eql(`/api/folders/${res.body.id}`)
                 })
                 .then(res => 
