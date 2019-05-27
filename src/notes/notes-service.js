@@ -19,7 +19,7 @@ const notesService = {
     },
     //delete
     deleteNote(knex, id) {
-        return knex({ id })
+        return knex('notes')
         .where({ id })
         .delete()
     },
