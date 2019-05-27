@@ -72,7 +72,7 @@ notesRouter
             req.params.id
         )
         .then(numRowsAffected => {
-            res.status(204).end()
+            res.status(204).json({message: `Deleted note ${req.params.id}`})
         })
         .catch(next)
     })
