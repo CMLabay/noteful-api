@@ -69,7 +69,7 @@ foldersRouter
             req.params.id
         )
         .then(numRowsAffected => {
-            res.status(204).end()
+            res.status(200).json({message:`Deleted successfully`})
         })
         .catch(next)
     })
